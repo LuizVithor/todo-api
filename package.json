@@ -1,0 +1,29 @@
+{
+  "name": "todos-express-sqlite",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jsonwebtoken": "^9.0.2",
+    "mkdirp": "^1.0.4",
+    "morgan": "~1.9.1",
+    "pluralize": "^8.0.0",
+    "sqlite3": "^5.0.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "todomvc-app-css": "^2.0.0",
+    "todomvc-common": "^1.0.0"
+  },
+  "devDependencies": {
+    "@appnest/readme": "^1.2.7",
+    "swagger-autogen": "^2.23.7"
+  }
+}

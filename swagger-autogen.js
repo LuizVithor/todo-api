@@ -1,7 +1,7 @@
 const swaggerAutogen = require('swagger-autogen')();
 
 const outputFile = './swagger_output.json';
-const endpointsFiles = ['./routes/index.js'];
+const endpointsFiles = ['./routes/index.js', './routes/auth.js'];
 
 const doc = {
     info: {
@@ -14,7 +14,16 @@ const doc = {
         addTask: {
             title: 'Titulo da tarefa',
             completed: false
-        }
+        },
+        login: {
+            name: 'Nome do usuário',
+            password: 'Senha do usuário'
+        },
+        register: {
+            name: 'Nome do usuário',
+            password: 'Senha do usuário',
+            image: 'foto do usuário (opcional)',
+        },
     }
 };
 

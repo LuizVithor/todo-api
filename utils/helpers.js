@@ -1,0 +1,3 @@
+const secret = "eyJhbGciOiJIUzUxMiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMDk3OTgyNywiaWF0IjoxNzIwOTc5ODI3fQ.mKLz2QPhDVkNwk4xKlYp4kaTKTyJ_ovjt2f5ErmoBrtaLOlQf-B8C_9w1ZszLnBbiJDYsvqID5wKdfQy3wjCJg";
+
+module.exports = secret;

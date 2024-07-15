@@ -3,8 +3,7 @@ var router = express.Router();
 var db = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
-const secret = "eyJhbGciOiJIUzUxMiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMDk3OTgyNywiaWF0IjoxNzIwOTc5ODI3fQ.mKLz2QPhDVkNwk4xKlYp4kaTKTyJ_ovjt2f5ErmoBrtaLOlQf-B8C_9w1ZszLnBbiJDYsvqID5wKdfQy3wjCJg";
+const secret = require('../utils/helpers');
 
 function validateRequest(requiredFields) {
     return function (req, res, next) {
@@ -22,6 +21,13 @@ function validateRequest(requiredFields) {
 }
 
 router.post('/register', validateRequest(['name', 'password']), async (req, res) => {
+
+    /*  #swagger.parameters['body'] = {
+            in: 'body',
+            description: 'Registro de usuário',
+            schema: { $ref: '#/definitions/register' }
+        } */
+
     const { name, password, image } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -43,6 +49,13 @@ router.post('/register', validateRequest(['name', 'password']), async (req, res)
 });
 
 router.post('/login', validateRequest(['name', 'password']), (req, res) => {
+
+    /*  #swagger.parameters['body'] = {
+            in: 'body',
+            description: 'Login',
+            schema: { $ref: '#/definitions/login' }
+        } */
+
     const { name, password } = req.body;
 
     db.get('SELECT * FROM users WHERE name = ?', [name], async (err, user) => {

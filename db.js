@@ -9,13 +9,14 @@ db.serialize(function() {
   db.run("CREATE TABLE IF NOT EXISTS todos ( \
     id INTEGER PRIMARY KEY, \
     title TEXT NOT NULL, \
-    completed INTEGER \
+    completed INTEGER, \
+    userId string NOT NULL \
   )");
   db.run("CREATE TABLE IF NOT EXISTS users ( \
     id TEXT PRIMARY KEY, \
     name TEXT NOT NULL UNIQUE, \
     password TEXT NOT NULL, \
-    profileImage TEXT NOT NULL \
+    profileImage TEXT \
   )");
 });
 

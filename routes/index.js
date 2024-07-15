@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../db');
+const jwt = require('jsonwebtoken');
+const secret = require('../utils/helpers');
 
 function validateRequest(requiredFields) {
   return function (req, res, next) {
@@ -17,8 +19,11 @@ function validateRequest(requiredFields) {
   };
 }
 
-function fetchTodos(_req, res, next) {
-  db.all('SELECT * FROM todos', [], function (err, rows) {
+function fetchTodos(req, res, next) {
+
+  const { id } = getUserInfo(req);
+
+  db.all('SELECT * FROM todos WHERE userId = ?', [id], function (err, rows) {
     if (err) {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -28,26 +33,35 @@ function fetchTodos(_req, res, next) {
         id: row.id,
         title: row.title,
         completed: row.completed == 1 ? true : false,
-        url: '/' + row.id
       }
     });
     res.locals.todos = todos;
     next();
   });
+};
+
+function getUserInfo(req) {
+  const token = req.headers.authorization?.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, secret);
+    return decoded;
+  } catch (error) {
+    return null;
+  }
 }
 
 router.get('/tasks', fetchTodos, function (_req, res) {
-  res.json({ todos: res.locals.todos });
+  res.json({ tasks: res.locals.todos });
 });
 
 router.get('/tasks/active', fetchTodos, function (_req, res) {
   const activeTodos = res.locals.todos.filter(todo => !todo.completed);
-  res.json({ todos: activeTodos });
+  res.json({ tasks: activeTodos });
 });
 
 router.get('/tasks/completed', fetchTodos, function (_req, res) {
   const completedTodos = res.locals.todos.filter(todo => todo.completed);
-  res.json({ todos: completedTodos });
+  res.json({ tasks: completedTodos });
 });
 
 router.post('/tasks', validateRequest(['title']), function (req, res) {
@@ -56,13 +70,16 @@ router.post('/tasks', validateRequest(['title']), function (req, res) {
           description: 'Detalhes da tarefa',
           schema: { $ref: '#/definitions/addTask' }
   } */
+  const { id } = getUserInfo(req);
   const title = req.body?.title?.trim();
   if (title !== '') {
-    db.run('INSERT INTO todos (title, completed) VALUES (?, ?)', [
+    db.run('INSERT INTO todos (title, completed, userId) VALUES (?, ?, ?)', [
       title,
-      req.body?.completed == true ? 1 : null
+      req.body?.completed == true ? 1 : null,
+      id
     ], function (err) {
       if (err) {
+        console.log(err)
         return res.status(500).json({ error: 'Internal Server Error' });
       }
       res.status(200).json({ message: 'Todo added successfully' });
@@ -72,10 +89,12 @@ router.post('/tasks', validateRequest(['title']), function (req, res) {
   }
 });
 
-router.patch('/todos/:id', function (req, res) {
+router.patch('/tasks/todos/:id', function (req, res) {
   const todoId = req.params.id;
-  db.get('SELECT completed FROM todos WHERE id = ?', [todoId], function (err, row) {
+  const { id } = getUserInfo(req);
+  db.get('SELECT completed FROM todos WHERE id = ? AND userID', [todoId, id], function (err, row) {
     if (err) {
+      console.log(err)
       return res.status(500).json({ error: 'Internal Server Error' });
     }
     if (!row) {

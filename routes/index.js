@@ -92,7 +92,7 @@ router.post('/tasks', validateRequest(['title']), function (req, res) {
 router.patch('/tasks/todos/:id', function (req, res) {
   const todoId = req.params.id;
   const { id } = getUserInfo(req);
-  db.get('SELECT completed FROM todos WHERE id = ? AND userID', [todoId, id], function (err, row) {
+  db.get('SELECT completed FROM todos WHERE id = ? AND userID = ?', [todoId, id], function (err, row) {
     if (err) {
       console.log(err)
       return res.status(500).json({ error: 'Internal Server Error' });

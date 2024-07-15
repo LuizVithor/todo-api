@@ -21,7 +21,7 @@ Este projeto é uma API de Lista de Tarefas construída usando Express e SQLite.
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/seuusuario/todos-express-sqlite.git
+git clone [https://github.com/seuusuario/todos-express-sqlite.git](https://github.com/LuizVithor/todo-api.git)
 cd todos-express-sqlite
 ```
 
@@ -29,12 +29,6 @@ cd todos-express-sqlite
 
 ```bash
 npm install
-```
-
-3. Inicialize o banco de dados:
-
-```bash
-npm run init-db
 ```
 
 ## Executando a Aplicação

@@ -9,9 +9,11 @@ const swaggerDocument = require('./swagger_output.json');
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 const secret = require('./utils/helpers');
+const cors = require('cors');
+
 
 var app = express();
-
+app.use(cors());
 app.locals.pluralize = require('pluralize');
 
 app.set('views', path.join(__dirname, 'views'));

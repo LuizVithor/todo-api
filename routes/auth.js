@@ -72,7 +72,7 @@ router.post('/login', validateRequest(['name', 'password']), (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id }, secret, { expiresIn: '3h' });
-        res.status(200).json({ message: 'Login successful', token });
+        res.status(200).json({ message: 'Login successful', token, profileImage: user.profileImage });
     });
 });
 

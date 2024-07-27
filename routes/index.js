@@ -89,6 +89,38 @@ router.post('/tasks', validateRequest(['title']), function (req, res) {
   }
 });
 
+router.put('/tasks/:id', validateRequest(['title']), function (req, res) {
+  /*  #swagger.parameters['body'] = {
+          in: 'body',
+          description: 'Detalhes da tarefa',
+          schema: { $ref: '#/definitions/editTask' }
+  } */
+  const todoId = req.params.id;
+  const { id } = getUserInfo(req);
+  const title = req.body?.title?.trim();
+  const completed = req.body?.completed;
+
+  if (title !== '') {
+    db.get('SELECT * FROM todos WHERE id = ? AND userId = ?', [todoId, id], function (err, row) {
+      if (err) {
+        console.log(err)
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      if (!row) {
+        return res.status(404).json({ error: 'Todo not found' });
+      }
+      db.run('UPDATE todos SET title = ?, completed = ? WHERE id = ?', [title, completed, todoId], function (err) {
+        if (err) {
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        res.json({ message: 'Todo updated successfully', id: todoId });
+      });
+    });
+  } else {
+    res.status(400).json({ error: 'Title cannot be empty' });
+  }
+}); 
+
 router.patch('/tasks/todos/:id', function (req, res) {
   const todoId = req.params.id;
   const { id } = getUserInfo(req);
@@ -107,6 +139,16 @@ router.patch('/tasks/todos/:id', function (req, res) {
       }
       res.json({ message: 'Todo status updated successfully', id: todoId, completed: newCompletedStatus == 1 });
     });
+  });
+});
+
+router.delete('/tasks/todos/:id', function (req, res) {
+  const todoId = req.params.id;
+  db.run('DELETE FROM todos WHERE id = ?', [todoId], function (err) {
+    if (err) {
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    res.json({ message: 'Todo deleted successfully', id: todoId });
   });
 });
 
